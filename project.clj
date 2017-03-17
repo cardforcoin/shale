@@ -11,8 +11,8 @@
                  [clj-wallhack "1.0.1"]
                  [clj-webdriver "0.6.1" :exclusions [org.clojure/core.cache]]
                  [cljs-ajax "0.5.3"]
-                 [com.amazonaws/aws-java-sdk-core "1.11.63"]
-                 [com.amazonaws/aws-java-sdk-ec2 "1.11.63"]
+                 [com.amazonaws/aws-java-sdk-core "1.11.77"]
+                 [com.amazonaws/aws-java-sdk-ec2 "1.11.77"]
                  [com.brweber2/clj-dns "0.0.2"]
                  [com.cemerick/url "0.1.1"]
                  [com.fzakaria/slf4j-timbre "0.3.4"]
@@ -46,7 +46,9 @@
                  [secretary "1.2.3"]
                  [slingshot "0.12.2"]
                  [sonian/carica "1.1.0" :exclusions [cheshire]]
-                 [venantius/accountant "0.1.7" :exclusions [org.clojure/tools.reader]]]
+                 [venantius/accountant "0.1.7" :exclusions [org.clojure/tools.reader]]
+                 [com.google.protobuf/protobuf-java "2.6.1"]
+                 [riemann "0.2.12" :exclusions [org.jsoup/jsoup io.netty/netty]]]
   :exclusions [cheshire]
   :scm {:name "git"
         :url "http://github.com/cardforcoin/shale"}

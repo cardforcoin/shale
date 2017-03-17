@@ -3,14 +3,18 @@
             [shale.utils :refer [gen-uuid]]
             [shale.proxies :as proxies]
             [shale.test.utils :refer [with-clean-redis
-                                      with-system-from-config]]))
+                                      with-system-from-config
+                                      with-riemann-server]
+             :as utils]))
 
 (def system (atom nil))
 
 (def once-fixtures
-  [(with-system-from-config
+  [with-riemann-server
+   (with-system-from-config
      system
-     {:node-list ["http://localhost:4444/wd/hub"]})])
+     {:node-list ["http://localhost:4444/wd/hub"]
+      :riemann utils/riemann-test-conf})])
 
 (def each-fixtures
   [(with-clean-redis system)])

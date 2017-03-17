@@ -5,12 +5,16 @@
             [com.stuartsierra.component :as component]
             [shale.utils :refer [gen-uuid]]
             [shale.test.utils :refer [with-selenium-servers
-                                      with-clean-redis]]
+                                      with-clean-redis
+                                      with-riemann-server]
+             :as utils]
             [shale.core :refer [get-app-system]]))
 
 ; the config we'll be testing
+
 (def system
-  (get-app-system {:node-list ["http://localhost:4444/wd/hub"]}))
+  (get-app-system {:node-list ["http://localhost:4444/wd/hub"]
+                   :riemann utils/riemann-test-conf}))
 
 (defn start-stop-system [test-fn]
   (alter-var-root #'system component/start)
@@ -21,6 +25,7 @@
 
 (def once-fixtures
   [(with-selenium-servers [4444])
+   (with-riemann-server)
    start-stop-system])
 
 (def each-fixtures

@@ -12,6 +12,7 @@
             [shale.proxies :as proxies]
             [shale.sessions :as sessions]
             [shale.utils :refer (maybe-resolve-env-keyword) ]
+            [shale.riemann :as riemann]
             [system.components.repl-server :refer [new-repl-server]]
             [ring.adapter.jetty :as jetty])
   (:import clojure.lang.IPersistentMap
@@ -59,11 +60,12 @@
 (defn get-app-system-keyvals [conf]
   [:config conf
    :redis-conn (get-redis-config conf)
+   :riemann (riemann/new-riemann conf)
    :logger (component/using (logging/new-logger) [:config])
    :node-pool (component/using (nodes/new-node-pool conf)
-                               [:redis-conn :logger ])
+                               [:redis-conn :logger :riemann])
    :session-pool (component/using (sessions/new-session-pool conf)
-                                  [:redis-conn :node-pool :proxy-pool :logger])
+                                  [:redis-conn :node-pool :proxy-pool :logger :riemann])
    :proxy-pool (component/using (proxies/new-proxy-pool)
                                 [:config :redis-conn :logger])
    :app (component/using (handler/new-app)

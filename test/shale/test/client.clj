@@ -4,8 +4,10 @@
             [clj-webdriver.taxi :refer [execute-script]]
             [shale.client :refer :all]
             [shale.test.utils :refer [with-selenium-servers
+                                      with-riemann-server
                                       local-port-available?
-                                      clear-redis]]
+                                      clear-redis]
+             :as utils]
             [shale.nodes :refer [refresh-nodes]]
             [shale.configurer :refer [get-config]]
             [shale.core :refer [get-shale-system init-cheshire]]
@@ -59,7 +61,10 @@
     (finally
       (shale.client/destroy-sessions!))))
 
-(use-fixtures :once (with-selenium-servers [4443 4444]) server-fixture)
+(use-fixtures :once
+  (with-selenium-servers [4443 4444])
+  (with-riemann-server)
+  server-fixture)
 (use-fixtures :each delete-sessions-fixture)
 
 (defn session-count []

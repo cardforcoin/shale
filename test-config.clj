@@ -2,4 +2,5 @@
  :node-max-sessions 6
  :port 5000
  :webdriver-timeout 3000
- :start-webdriver-timeout 5000}
+ :start-webdriver-timeout 5000
+ :riemann {:host "localhost" :port 6666}}

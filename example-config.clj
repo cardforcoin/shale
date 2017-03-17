@@ -76,5 +76,7 @@
 
 
              }
-
+ ;; options for riemann client
+ :riemann {:host "localhost"
+           :port 6666}
  }

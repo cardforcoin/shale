@@ -2,14 +2,17 @@
   (:require [clojure.java.io :refer [writer]]
             [taoensso.carmine :as car]
             [com.stuartsierra.component :as component]
-            [shale.core :refer [get-app-system]])
+            [shale.core :refer [get-app-system]]
+            [riemann.core :as rc]
+            [riemann.transport.tcp :as rt])
   (:import [org.openqa.selenium.server
             SeleniumServer
             RemoteControlConfiguration]
            [java.io
             IOException
             PrintStream]
-           java.net.Socket))
+           java.net.Socket
+           com.aphyr.riemann.client.IRiemannClient))
 
 (defn local-port-available? [port]
   (try
@@ -88,3 +91,20 @@
         (test-fn)
         (finally
           (clear-redis redis))))))
+
+(def riemann-test-conf {:host "127.0.0.1" :port 6666})
+
+(defn with-riemann-server
+  ([] (with-riemann-server (constantly nil)))
+  ([test-events]
+   (fn [test-fn]
+     (let [stream (atom [])
+           s (riemann.streams/append stream)
+           server (rt/tcp-server riemann-test-conf)
+           core (rc/transition! (rc/core) {:services [server] :streams [s]})]
+       (try
+         (test-fn)
+         (finally
+           (test-events @stream)
+           (shale.logging/debug (str "Riemann recieved: " @stream))
+           (rc/stop! core)))))))
